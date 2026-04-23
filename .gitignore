@@ -26,6 +26,9 @@ credentials/
 *-credentials.json
 firebase-adminsdk*.json
 
+# Wiki sync output (local preview)
+.wiki-build/
+
 # OS / editor
 .DS_Store
 Thumbs.db

@@ -63,12 +63,15 @@ Requires **Node.js ≥ 18**.
 
 ## Scripts
 
-| Command              | What it does                             |
-|----------------------|------------------------------------------|
-| `npm run build`      | Compile ESM + types to `dist/` via tsup  |
-| `npm run typecheck`  | Strict `tsc --noEmit` on `src/`          |
-| `npm test`           | Run Vitest (unit + integration)          |
-| `npm run test:watch` | Vitest in watch mode                     |
+| Command                        | What it does                             |
+|--------------------------------|------------------------------------------|
+| `npm run build`                | Compile ESM + types to `dist/` via tsup  |
+| `npm run typecheck`            | Strict `tsc --noEmit` on `src/`          |
+| `npm test`                     | Run Vitest (unit + integration)          |
+| `npm run test:watch`           | Vitest in watch mode                     |
+| `npm run docs:sync-wiki`       | Mirror `docs/` into the GitHub Wiki      |
+| `npm run docs:sync-wiki:dry`   | Preview wiki changes without pushing     |
+| `npm run docs:sync-wiki:local` | Build wiki pages into `.wiki-build/`     |
 
 ## Running integration tests
 

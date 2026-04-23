@@ -26,6 +26,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
+    "docs:sync-wiki": "node scripts/sync-wiki.mjs",
+    "docs:sync-wiki:dry": "node scripts/sync-wiki.mjs --dry",
+    "docs:sync-wiki:local": "node scripts/sync-wiki.mjs --local",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
