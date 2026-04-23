@@ -6,6 +6,10 @@ export {
   type PaginateOptions,
   type PaginateHandler,
   type PaginateCompleteHandler,
+  type QueryPageOptions,
+  type QueryPageResult,
+  type Unsubscribe,
+  type SnapshotErrorHandler,
 } from './FirestoreWrapper.js';
 export { FirStorageWrapper, type UploadOptions } from './FirStorageWrapper.js';
 export { FirUserWrapper } from './FirUserWrapper.js';
@@ -15,6 +19,13 @@ export {
   type RetryableErrorCode,
   isRetryableError,
 } from './RetryableErrors.js';
+export {
+  NoopLogger,
+  ConsoleLogger,
+  MemoryLogger,
+  type Logger,
+  type LogLevel,
+} from './Logger.js';
 export {
   DEFAULT_STORAGE_POLICY,
   type StoragePolicy,

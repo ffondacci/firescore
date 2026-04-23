@@ -1,8 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { FirestoreWrapper, RetryPolicy, isRetryableError } from '../src/index.js';
+import { FirestoreWrapper, MemoryLogger, RetryPolicy, isRetryableError } from '../src/index.js';
 
-function makeWrapper(): FirestoreWrapper {
+function makeWrapper(logger = new MemoryLogger()): {
+  wrapper: FirestoreWrapper;
+  logger: MemoryLogger;
+} {
   // Bypass the real FirInstance — we only exercise executeWithRetry here.
   const stub = {
     firestore: {} as never,
@@ -14,8 +17,9 @@ function makeWrapper(): FirestoreWrapper {
       updateTimestampField: 'updatedAt',
       pageSize: 10,
     },
+    logger,
   } as const;
-  return new FirestoreWrapper(stub as never);
+  return { wrapper: new FirestoreWrapper(stub as never), logger };
 }
 
 describe('isRetryableError', () => {
@@ -33,7 +37,7 @@ describe('isRetryableError', () => {
 
 describe('FirestoreWrapper.executeWithRetry', () => {
   it('retries retryable errors then succeeds', async () => {
-    const wrapper = makeWrapper();
+    const { wrapper, logger } = makeWrapper();
     const fn = vi
       .fn()
       .mockRejectedValueOnce(Object.assign(new Error('transient'), { code: 'UNAVAILABLE' }))
@@ -43,20 +47,29 @@ describe('FirestoreWrapper.executeWithRetry', () => {
     const result = await wrapper.executeWithRetry(fn);
     expect(result).toBe('ok');
     expect(fn).toHaveBeenCalledTimes(3);
+
+    // Logger should have captured two retry attempts + one success info.
+    const attempts = logger.entries.filter((e) => e.message === 'firestore.retry.attempt');
+    const success = logger.entries.filter((e) => e.message === 'firestore.retry.succeeded');
+    expect(attempts).toHaveLength(2);
+    expect(success).toHaveLength(1);
   });
 
-  it('bails immediately on non-retryable errors', async () => {
-    const wrapper = makeWrapper();
+  it('bails immediately on non-retryable errors and logs the bail', async () => {
+    const { wrapper, logger } = makeWrapper();
     const fn = vi.fn().mockRejectedValue(
       Object.assign(new Error('bad input'), { code: 'INVALID_ARGUMENT' }),
     );
 
     await expect(wrapper.executeWithRetry(fn)).rejects.toThrow('bad input');
     expect(fn).toHaveBeenCalledTimes(1);
+    const bail = logger.entries.find((e) => e.message === 'firestore.retry.bail');
+    expect(bail).toBeDefined();
+    expect(bail?.context?.code).toBe('INVALID_ARGUMENT');
   });
 
   it('honors an overriding retry policy', async () => {
-    const wrapper = makeWrapper();
+    const { wrapper } = makeWrapper();
     const fn = vi
       .fn()
       .mockRejectedValue(Object.assign(new Error('x'), { code: 'UNAVAILABLE' }));
