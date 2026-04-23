@@ -1,0 +1,62 @@
+{
+  "name": "firescore",
+  "version": "1.0.0",
+  "description": "A typed Node.js Firebase / GCloud wrapper with retry and storage policies for multi-instance Firestore setups.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "firebase",
+    "firestore",
+    "firebase-admin",
+    "gcloud",
+    "typescript",
+    "retry",
+    "wrapper"
+  ],
+  "author": "Florent Fondacci",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ffondacci/firescore.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ffondacci/firescore/issues"
+  },
+  "homepage": "https://github.com/ffondacci/firescore#readme",
+  "dependencies": {
+    "@google-cloud/storage": "^7.15.0",
+    "async-retry": "^1.3.3",
+    "firebase-admin": "^13.0.2"
+  },
+  "devDependencies": {
+    "@types/async-retry": "^1.4.9",
+    "@types/node": "^22.10.5",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
